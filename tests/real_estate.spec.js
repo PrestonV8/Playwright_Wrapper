@@ -1,5 +1,5 @@
 const {test, expect} = require('@playwright/test');
-const {chromium} = require('@playwright/test');
+const { chromium } = require('@playwright/test');
 
 // uses authenticated storage state to skip the catcha before running the test
 test.use({storageState: 'auth.json'});
