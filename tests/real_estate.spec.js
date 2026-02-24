@@ -5,7 +5,7 @@ const { chromium } = require('@playwright/test');
 test.use({storageState: 'auth.json'});
 
 test('real estate test', async () => {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch(); // remove the "headless: false" option to run the test in headless mode for CI environments
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('https://larizzare.com/');
