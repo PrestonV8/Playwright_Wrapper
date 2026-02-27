@@ -1,28 +1,248 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Playwright Wrapper</title>
-        <style>
-            body{ font-family: Ariel; text-align: center; margin-top:100px}
-            button {
-                padding: 15x 25px;
-                font-size: 16px;
-                border-radius: 8px;
-                border: none;
-                background: black;
-                color: white;
-                cursor: pointer;
-            }
-        </style>
-    </head>
-    <body>
-        <h2>Playwright Test Runner</h2>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playwright Wrapper</title>
 
-        <form action="/run" method="post">
-            <button type="submit">Run Tests</button>
-        </form>
+    <style>
+      :root{
+        --bg1:#0ea5e9;
+        --bg2:#8b5cf6;
+        --card: rgba(255,255,255,.10);
+        --cardBorder: rgba(255,255,255,.18);
+        --text:#e8eefc;
+        --muted: rgba(232,238,252,.75);
+        --shadow: 0 20px 60px rgba(0,0,0,.35);
+        --radius: 18px;
+        --warn:#f59e0b;
+      }
+      *{ box-sizing:border-box; }
+      body{
+        margin:0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+        color: var(--text);
+        min-height:100vh;
+        background:
+          radial-gradient(1200px 600px at 20% 10%, rgba(255,255,255,.18), transparent 55%),
+          radial-gradient(900px 500px at 90% 30%, rgba(255,255,255,.14), transparent 55%),
+          linear-gradient(135deg, var(--bg1), var(--bg2));
+      }
 
-        <br><br>
-        <a href="/reports">View Reports Folder</a>
-    </body>
+      .wrap{
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 36px 20px 60px;
+      }
+
+      .topbar{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+      }
+      .brand{
+        display:flex;
+        align-items:center;
+        gap:14px;
+      }
+      .logo{
+        width:46px;height:46px;border-radius:14px;
+        background: rgba(255,255,255,.16);
+        border: 1px solid var(--cardBorder);
+        display:grid;place-items:center;
+        box-shadow: var(--shadow);
+      }
+      .logo span{
+        font-size:22px;
+        font-weight:900;
+        letter-spacing:.5px;
+      }
+      h1{
+        margin:0;
+        font-size: 30px;
+        line-height: 1.1;
+        letter-spacing: .2px;
+      }
+      .subtitle{
+        margin:6px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .badge{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.20);
+        background: rgba(10,14,25,.30);
+        color: rgba(232,238,252,.88);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .dot{
+        width:10px;height:10px;border-radius:99px;
+        background: var(--warn);
+        box-shadow: 0 0 0 4px rgba(245,158,11,.18);
+      }
+
+      .grid{
+        display:grid;
+        grid-template-columns: 1.2fr .8fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
+      @media (max-width: 900px){
+        .grid{ grid-template-columns: 1fr; }
+      }
+
+      .card{
+        background: var(--card);
+        border: 1px solid var(--cardBorder);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px;
+        backdrop-filter: blur(10px);
+      }
+      .card h2{
+        margin: 0 0 12px;
+        font-size: 18px;
+        letter-spacing: .2px;
+      }
+
+      .panel{
+        background: rgba(10,14,25,.45);
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 16px;
+        padding: 14px;
+        margin-top: 14px;
+      }
+      pre{
+        margin:0;
+        color: #d7e2ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.20);
+        background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(14,165,233,.95));
+        color: #071019;
+        font-weight: 900;
+        font-size: 15px;
+        cursor:pointer;
+        transition: transform .06s ease, filter .2s ease;
+      }
+      .btn:hover{ filter: brightness(1.05); }
+      .btn:active{ transform: translateY(1px); }
+
+      a{
+        color: rgba(232,238,252,.95);
+        text-decoration: none;
+      }
+      a:hover{ text-decoration: underline; }
+
+      .kpis{
+        display:grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .kpi{
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,.18);
+        background: rgba(10,14,25,.28);
+      }
+      .kpi .label{ font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+      .kpi .value{ font-size: 18px; font-weight: 900; }
+
+      .footer{
+        margin-top: 14px;
+        font-size: 12px;
+        color: rgba(232,238,252,.70);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo"><span>PW</span></div>
+          <div>
+            <h1>Playwright Test Runner</h1>
+            <div class="subtitle">Click to run your wrapper tests (same behavior, prettier UI)</div>
+          </div>
+        </div>
+
+        <div class="badge" title="Local UI">
+          <span class="dot"></span>
+          <span>Ready to run</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Left: Run action (uses your existing /run endpoint) -->
+        <div class="card">
+          <h2>Start a run</h2>
+
+          <form action="/run" method="post">
+            <button type="submit" class="btn">
+              Run Tests →
+            </button>
+          </form>
+
+          <div class="panel">
+            <pre>Tip: Click “Run Tests” to trigger your existing POST /run endpoint.</pre>
+          </div>
+
+          <div class="footer">
+            This page only changes the UI styling — it does not require /runs or any new backend routes.
+          </div>
+        </div>
+
+        <!-- Right: Quick links/info -->
+        <div class="card">
+          <h2>Quick info</h2>
+
+          <div class="kpis">
+            <div class="kpi">
+              <div class="label">Endpoint used</div>
+              <div class="value">POST /run</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Reports</div>
+              <div class="value"><a href="/reports">/reports</a></div>
+            </div>
+            <div class="kpi">
+              <div class="label">UI file</div>
+              <div class="value">index.html</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Goal</div>
+              <div class="value">Pretty UI</div>
+            </div>
+          </div>
+
+          <div class="footer" style="margin-top:14px;">
+            <a href="/reports">Open reports folder →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
